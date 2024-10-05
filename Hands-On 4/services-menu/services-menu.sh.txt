@@ -1,0 +1,67 @@
+#!/bin/bash
+
+echo "Bienvenido al menu de opciones .O. "
+echo "Escoge alguna de las opciones ingresando el numero de opcion"
+echo "1-Listar el contenido de una carpeta"
+echo "2-Crear un archivo de texto con contenido"
+echo "3-Comparar dos archivos de texto"
+echo "4-awk"
+echo "5-grep"
+read option
+
+case $option in
+	1)
+	echo "Ingresa la ruta de la carpeta"
+	read ruta_actual
+		while [ -d "$ruta_actual" ]; do
+			echo "Carpetas en $ruta_actual:"
+			opciones=($(ls -d $ruta_actual/*/)) 
+    
+    			i=1
+    			for opcion in "${opciones[@]}"; do
+        			echo "$i) $opcion"
+        			((i++))
+    			done
+    
+    			echo "Seleccione una carpeta (número):"
+    			read seleccion
+    
+    			ruta_actual="${opciones[$seleccion-1]}"
+    
+    			
+    			if [ ! -d "$ruta_actual" ]; then
+        			echo "No es un directorio válido."
+        			break
+    			fi
+		done
+	;;
+	2)
+	echo "Ingresa el mensaje a almacenar"
+	read message
+	echo $message > myPersonalText.txt
+	echo "Mensaje escrito :)"
+	;;
+	3)
+	echo "Dame la ruta del primer archivo"
+	read path1
+	echo "Dame la ruta del segundo archivo"
+	read path2
+	diff $path1 $path2
+	;;
+	4)
+	echo "Mira como funciona awk en el archivo 1"
+	read pathAwk
+	awk '{print}' $pathAwk
+	;;
+	5)
+	echo "Mira como funciona grep en el archivo 1"
+	echo "Ingresa una ruta(de un archivo con texto)"
+	read pathGrep
+	echo "Ingresa una palabra que quieras buscar en ese texto"
+	read wordGrep
+	grep -i $wordGrep $pathGrep
+	;;
+	*)
+	echo "No se encontro tu opcion"
+	;;
+esac
