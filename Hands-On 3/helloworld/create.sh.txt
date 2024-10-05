@@ -1,0 +1,14 @@
+#!/bin/bash
+echo "Hola Mundo" > mytext.txt
+cat mytext.txt
+echo "Creando backup"
+mkdir backup
+cp mytext.txt backup/
+cd backup
+echo "Contenido de backup"
+ls
+echo "Eliminando mytext"
+rm mytext.txt
+cd ..
+echo "Eliminando backup"
+rmdir backup
