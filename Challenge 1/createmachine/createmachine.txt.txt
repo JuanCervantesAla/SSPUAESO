@@ -1,0 +1,42 @@
+#!/bin/bash
+
+echo "Creación y automatización de una máquina virtual"
+echo "Ingresa el nombre de la máquina:"
+read name
+echo "Ingresa el tipo de sistema operativo (ejemplo: Linux26, Ubuntu_64):"
+read so
+
+# Crear la máquina virtual
+VBoxManage createvm --name "$name" --ostype "$so" --register
+
+echo "¿Cuántos CPU debería tener?"
+read cpu
+echo "¿Cuánta memoria de RAM debería tener? (en MB)"
+read ram
+echo "¿Cuánta memoria de VRAM debería tener? (en MB)"
+read vram
+
+# Configurar la máquina virtual
+VBoxManage modifyvm "$name" --cpus "$cpu" --memory "$ram" --vram "$vram"
+
+echo "Dame una ruta completa para el archivo .vdi (incluyendo el nombre del archivo .vdi):"
+read path
+echo "¿Cuánto almacenamiento debería tener el disco duro? (en MB)"
+read storage
+
+# Crear el disco duro virtual
+VBoxManage createhd --filename "$path" --size "$storage" --variant Standard
+
+echo "Dame un nombre para el controlador SATA:"
+read sata
+
+# Crear el controlador SATA antes de intentar adjuntar el disco
+VBoxManage storagectl "$name" --name "$sata" --add sata --bootable on
+
+# Adjuntar el disco duro al controlador SATA
+VBoxManage storageattach "$name" --storagectl "$sata" --port 0 --device 0 --type hdd --medium "$path"
+
+echo "Configuración de la máquina virtual '$name':"
+VBoxManage showvminfo "$name"
+
+echo "La máquina virtual '$name' ha sido creada y configurada con éxito."
